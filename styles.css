@@ -1,0 +1,92 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    height: 100vh;
+    background-image: url('https://source.unsplash.com/random/1920x1080/?wallpaper,landscape');/*pulls random photo using last keyword as search keyword*/
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.weather-container {
+    width: 30vw;
+    min-width: 300px;
+    max-width: 450px;
+    height: auto;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.644);
+}
+
+/*--------search items------*/
+#search-input {
+    outline: none;
+    padding: .25em;
+    border-radius: .75em;
+    border: none;
+    background-color: rgba(78, 78, 78, 0.425);
+}
+#search-btn {
+    margin: .35em;
+    height: 1.6em;
+    width: 1.6em;
+    border-radius: 50%;
+    border: none;
+    background-color: rgba(78, 78, 78, 0.425);
+    cursor: pointer;
+}
+#search-btn:active {
+    background-color: rgba(32, 32, 32, 0.562);
+}
+
+/*--------center all container items within their divs------*/
+.weather-items {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid red;
+  }
+
+/*--------weather information------*/
+.location, .weather-icon, .temperature, .description{
+    font-family: 'Fredoka', sans-serif;
+}
+.search-bar {
+    width: 100% ;
+    height: 2.5em;
+}
+.location {
+    font-size: 1.25em;
+    width: 100%;
+    height: 2em;
+}
+.weather-icon {
+    width: 100%;
+    height: 8em;
+}
+.temperature {
+    font-size: 3.5em;
+    width: 100%;
+    height: 1.5em;
+}
+.description {
+    font-size: 1.25em;
+    width: 100%;
+    height: 4em;
+}
+#degrees {
+    cursor: pointer;
+}
+.refresh {
+    width: 100%;
+    height: 2em;
+    justify-content: flex-end;
+}
+#refresh-btn {
+    outline: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 1.5em;
+}
