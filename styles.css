@@ -45,11 +45,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-bottom: 1px solid red;
   }
 
 /*--------weather information------*/
-.location, .weather-icon, .temperature, .description{
+.location, .weather-icon, .temperature, .description, #more-info{
     font-family: 'Fredoka', sans-serif;
 }
 .search-bar {
@@ -59,10 +58,12 @@ body {
 .location {
     font-size: 1.25em;
     width: 100%;
-    height: 2em;
+    height: auto;
 }
-.weather-icon {
-    width: 100%;
+.weather-icon { /*centers icon image*/
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
     height: 8em;
 }
 .temperature {
@@ -73,15 +74,25 @@ body {
 .description {
     font-size: 1.25em;
     width: 100%;
-    height: 4em;
+    height: auto;
+    padding-bottom: .35em;
+    border-bottom: 1px solid rgba(37, 37, 37, 0.404);
 }
 #degrees {
     cursor: pointer;
+}
+#degrees:active {
+    color: rgba(78, 78, 78, 0.425);
 }
 .refresh {
     width: 100%;
     height: 2em;
     justify-content: flex-end;
+}
+#more-info {
+    display: none;
+    cursor: pointer;
+    margin-right: 1.5em;
 }
 #refresh-btn {
     outline: none;
