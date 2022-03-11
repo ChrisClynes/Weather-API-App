@@ -2,15 +2,25 @@ const APP_LOCATION = document.getElementById("location");
 const APP_ICON = document.getElementById("weather-icon");
 const APP_DEGREES = document.getElementById("degrees");
 const APP_DESCRIPTION = document.getElementById("description");
+const APP_FEELSLIKE = document.getElementById("feels-like");
+const APP_HIGHTEMP = document.getElementById("high-temp");
+const APP_LOWTEMP = document.getElementById("low-temp");
+const APP_HUMIDITY = document.getElementById("humidity");
+const APP_WINDSPEED = document.getElementById("windspeed");
+const APP_WINDDIRECTION = document.getElementById("wind-direction");
 const input = document.getElementById("search-input");
+const detailedWeather = document.getElementById("detailed-weather");
 const searchBtn = document.getElementById("search-btn");
 const refreshBtn = document.getElementById("refresh-btn");
 const moreInfo = document.getElementById("more-info");
-const fahrenheitCountry = ["us", "bs", "ky", "lr", "pw", "fm", "mh" ]//List of countries or territories that use fahrenheit
+const fahrenheitCountry = ["us", "bs", "ky", "lr", "pw", "fm", "mh" ];//List of countries or territories that use fahrenheit
 
 //-----------------State Variables------------------------------
 
 let currentKelvin = null;
+let feelsLikeKelvin = null;
+let highKelvin = null;
+let lowKelvin = null;
 let currentLocation = null;
 
 //---------------check for geo location-------------------------
@@ -50,20 +60,31 @@ function fetchWeatherData(url) {
     const key = "948344ca1222b060d61dc459cc378305";
     fetch(url+key)
         .then((response) => response.json())
-        .then((data) => displayWeatherData(data));
+        .then((data) => cityErrorCheck(data));
 }
 function citySearchWeather() {
     let searchInput = document.getElementById('search-input').value;
     let apiUrl =`https://api.openweathermap.org/data/2.5/weather?q=${searchInput}&appid=`
     fetchWeatherData(apiUrl);
 }
-
+function cityErrorCheck(data){
+    if (data.sys == undefined){
+        APP_LOCATION.innerHTML="city not found";
+        resetDisplay();
+        return;
+    }else {
+        displayWeatherData(data);
+    }
+}
 //--------------DOM Manipulation--------------------------
 function displayWeatherData(data){
     const city = data.name;
     const country = data.sys.country.toLowerCase();
     const description = data.weather[0].description;
     const icon = data.weather[0].icon;
+    const humidity = data.main.humidity;
+    const windSpeed = data.wind.speed;
+    const windDirection = data.wind.deg;
     fahrenheit = convertKelvinToFar(data.main.temp);
     celsius = convertKelvinToCel(data.main.temp);
     
@@ -72,18 +93,35 @@ function displayWeatherData(data){
     APP_ICON.src=`https://openweathermap.org/img/wn/${icon}@2x.png`;
     APP_DESCRIPTION.innerHTML=description;
     moreInfo.style.display="flex";
+
+    currentKelvin = data.main.temp;//sets state value to use for converting back and forth fahrenheit and celsius without making another api call
+    feelsLikeKelvin = data.main.feels_like;
+    highKelvin = data.main.temp_max;
+    lowKelvin = data.main.temp_min;
+    currentLocation = city;//sets current weather location for refresh use.
     
 
     if (fahrenheitCountry.includes(country)){
         APP_DEGREES.innerHTML=fahrenheit;
+        APP_FEELSLIKE.innerHTML=`Feels like: ${convertKelvinToFar(feelsLikeKelvin)}`
+        APP_HIGHTEMP.innerHTML=`High temp: ${convertKelvinToFar(highKelvin)}`
+        APP_LOWTEMP.innerHTML=`Low temp: ${convertKelvinToFar(lowKelvin)}`
     }else {
         APP_DEGREES.innerHTML=celsius;
+        APP_FEELSLIKE.innerHTML=`Feels like: ${convertKelvinToCel(feelsLikeKelvin)}`
+        APP_HIGHTEMP.innerHTML=`High temp: ${convertKelvinToCel(highKelvin)}`
+        APP_LOWTEMP.innerHTML=`Low temp: ${convertKelvinToCel(lowKelvin)}`
     }
-    currentKelvin = data.main.temp;
-    currentLocation = city;//sets current weather location for refresh use.
+    
     console.log(data);
 }
 
+function resetDisplay(){
+    APP_ICON.src='';
+    APP_DEGREES.innerHTML="-°F";
+    APP_DESCRIPTION.innerHTML='';
+    moreInfo.style.display="none";
+}
 
 function convertKelvinToFar(kelvin) {
     let fahrenheit = String(Math.floor(eval(`(${kelvin}-273.15)*(9/5)+32`)));
@@ -95,14 +133,21 @@ function convertKelvinToCel(kelvin) {
 }
 
 
+
 //----------Buttons and clickable elements------------------
 function toggleDegrees() {
     let temp = document.getElementById("degrees").innerHTML;
     let regEx = /°F/;
      if (regEx.test(temp)){
          APP_DEGREES.innerHTML=convertKelvinToCel(currentKelvin);
+         APP_FEELSLIKE.innerHTML=`Feels like: ${convertKelvinToCel(feelsLikeKelvin)}`
+         APP_HIGHTEMP.innerHTML=`High temp: ${convertKelvinToCel(highKelvin)}`
+         APP_LOWTEMP.innerHTML=`Low temp: ${convertKelvinToCel(lowKelvin)}`
      }else {
         APP_DEGREES.innerHTML=convertKelvinToFar(currentKelvin);
+        APP_FEELSLIKE.innerHTML=`Feels like: ${convertKelvinToFar(feelsLikeKelvin)}`
+        APP_HIGHTEMP.innerHTML=`High temp: ${convertKelvinToFar(highKelvin)}`
+        APP_LOWTEMP.innerHTML=`Low temp: ${convertKelvinToFar(lowKelvin)}`
      }
 }
 
@@ -115,11 +160,21 @@ function refreshWeather() {
     }
 }
 
+function moreInformation() {
+    console.log("triggered")
+    if (detailedWeather.style.display == "none" || detailedWeather.style.display == "") {
+        detailedWeather.style.display="flex";
+    }else {
+        detailedWeather.style.display="none";
+    }     
+}
+
 //--------------------Event Listeners----------------------
 
 searchBtn.addEventListener('click', citySearchWeather);
-refreshBtn.addEventListener('click', refreshWeather);
 APP_DEGREES.addEventListener('click', toggleDegrees);
+moreInfo.addEventListener('click', moreInformation);
+refreshBtn.addEventListener('click', refreshWeather);
 
 //allow enter key to be used with searchbar
 input.addEventListener("keyup", function(event) {
@@ -140,9 +195,8 @@ input.addEventListener("keyup", function(event) {
 
 
 
-
+  //add default sunshine icon
   //fix background loading
   //apply icons
   //add search api dropdown
-  //error handle city not found search
   //fix geo location on load.

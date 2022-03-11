@@ -15,13 +15,21 @@
 <body>
     <div class="weather-container">
         <div class="search-bar weather-items">
-            <input type="search" id="search-input" placeholder="find a location"/>
-            <button type="button" id="search-btn"><i class="fa fa-search"></i></button>
+            <input type="text" id="search-input" placeholder="find a location"/>
+            <button type="submit" id="search-btn"><i class="fa fa-search" title="submit search" aria-label="submit search"></i></button>
         </div>
         <div class="location weather-items" id="location"></div>
         <img class="weather-icon weather-items" id="weather-icon"></img>
         <div class="temperature weather-items" id="degrees">-°F</div>
         <div class="description weather-items" id="description"></div>
+        <div class="detailed-weather" id="detailed-weather">
+            <div clas="detailed-item" id="feels-like"></div>
+            <div clas="detailed-item" id="high-temp"></div>
+            <div clas="detailed-item" id="low-temp"></div>
+            <div clas="detailed-item" id="humidity"></div>
+            <div clas="detailed-item" id="wind-direction"></div>
+            <div clas="detailed-item" id="windspeed"></div>
+        </div>
         <div class="refresh weather-items" id="refresh">
             <div id="more-info">more information</div>
             <button id="refresh-btn"><i class="fa fa-refresh"></i></button>
