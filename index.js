@@ -12,6 +12,7 @@ const input = document.getElementById("search-input");
 const detailedWeather = document.getElementById("detailed-weather");
 const searchBtn = document.getElementById("search-btn");
 const refreshBtn = document.getElementById("refresh-btn");
+const degreeToggle = document.getElementById("degree-toggle");
 const moreInfo = document.getElementById("more-info");
 const fahrenheitCountry = ["us", "bs", "ky", "lr", "pw", "fm", "mh" ];//List of countries or territories that use fahrenheit
 
@@ -26,34 +27,33 @@ let currentLocation = null;
 //---------------check for geo location-------------------------
 function getGeoLocation() {
     if ("geolocation" in navigator){
-       navigator.geolocation.getCurrentPosition(setCoords, showError);
-       function setCoords(position){
-           let lat = position.coords.lattitude;
-           let long = position.coords.longitude;
-           geoLocationWeather(lat, long);
-       }
-       function showError(error){
-        document.getElementById("location").innerHTML=error.message;
-        document.getElementById("description").innerHTML="Unable to obtain weather data";
-    }
-        
+       navigator.geolocation.getCurrentPosition(setCoords, showError); 
     }else {
         console.log("No location data available")
     }
 }
+function setCoords(position){
+    let lat = position.coords.lattitude;
+    let long = position.coords.longitude;
+    console.log(position.coords.lattitude)
+    geoLocationWeather(lat, long);
+}
+function showError(error){
+    document.getElementById("location").innerHTML=error.message;
+    document.getElementById("description").innerHTML="Unable to obtain weather data";
+}
 
 function geoLocationWeather(lattitude, longitude) {
-    let apiUrl =`https://api.openweathermap.org/data/2.5/weather?lat=${lattitude}&lon=${longitude}&appid=`
+    let apiUrl =`api.openweathermap.org/data/2.5/weather?lat=${lattitude}&lon=${longitude}&appid=`
     if (lattitude == undefined || longitude == undefined){
-        APP_LOCATION.innerHTML="location data no available, use search";
-        APP_LOCATION.style.backgroundColor="rgba(255, 255, 255, 0.644)";
+        APP_LOCATION.innerHTML="location data not available, please use search";
         return;//if location data cannot be pulled from browser, display message and return out of function
     }else {
         fetchWeatherData(apiUrl)
     }     
 }
 //--------------------On page load----------------------
-//window.onload = getGeoLocation();
+window.onload = getGeoLocation();
 
 //------------------fetch API data---------------
 function fetchWeatherData(url) {
@@ -69,7 +69,7 @@ function citySearchWeather() {
 }
 function cityErrorCheck(data){
     if (data.sys == undefined){
-        APP_LOCATION.innerHTML="city not found";
+        APP_LOCATION.innerHTML="city or location not found";
         resetDisplay();
         return;
     }else {
@@ -92,6 +92,9 @@ function displayWeatherData(data){
     APP_LOCATION.innerHTML=city;
     APP_ICON.src=`https://openweathermap.org/img/wn/${icon}@2x.png`;
     APP_DESCRIPTION.innerHTML=description;
+    APP_HUMIDITY.innerHTML=`Humidity: ${humidity}%`;
+    APP_WINDDIRECTION.innerHTML=`Wind direction: ${windDirection}°`;
+    APP_WINDSPEED.innerHTML=`Wind speed: ${windSpeed}m/s`;
     moreInfo.style.display="flex";
 
     currentKelvin = data.main.temp;//sets state value to use for converting back and forth fahrenheit and celsius without making another api call
@@ -116,13 +119,21 @@ function displayWeatherData(data){
     console.log(data);
 }
 
+//------------------reset all displayed data----------------
 function resetDisplay(){
     APP_ICON.src='';
     APP_DEGREES.innerHTML="-°F";
-    APP_DESCRIPTION.innerHTML='';
+    APP_DESCRIPTION.innerHTML= null;
+    APP_FEELSLIKE.innerHTML= null;
+    APP_HIGHTEMP.innerHTML= null;
+    APP_LOWTEMP.innerHTML= null;
+    APP_HUMIDITY.innerHTML= null;
+    APP_WINDDIRECTION.innerHTML= null;
+    APP_WINDSPEED.innerHTML= null;
     moreInfo.style.display="none";
 }
 
+//-------------------temp conversions-----------------------
 function convertKelvinToFar(kelvin) {
     let fahrenheit = String(Math.floor(eval(`(${kelvin}-273.15)*(9/5)+32`)));
     return `${fahrenheit}°F`;
@@ -138,17 +149,21 @@ function convertKelvinToCel(kelvin) {
 function toggleDegrees() {
     let temp = document.getElementById("degrees").innerHTML;
     let regEx = /°F/;
-     if (regEx.test(temp)){
-         APP_DEGREES.innerHTML=convertKelvinToCel(currentKelvin);
-         APP_FEELSLIKE.innerHTML=`Feels like: ${convertKelvinToCel(feelsLikeKelvin)}`
-         APP_HIGHTEMP.innerHTML=`High temp: ${convertKelvinToCel(highKelvin)}`
-         APP_LOWTEMP.innerHTML=`Low temp: ${convertKelvinToCel(lowKelvin)}`
-     }else {
-        APP_DEGREES.innerHTML=convertKelvinToFar(currentKelvin);
-        APP_FEELSLIKE.innerHTML=`Feels like: ${convertKelvinToFar(feelsLikeKelvin)}`
-        APP_HIGHTEMP.innerHTML=`High temp: ${convertKelvinToFar(highKelvin)}`
-        APP_LOWTEMP.innerHTML=`Low temp: ${convertKelvinToFar(lowKelvin)}`
-     }
+    if (APP_DEGREES.innerHTML == "-°F"){
+        return;
+    }else {
+        if (regEx.test(temp)){
+            APP_DEGREES.innerHTML=convertKelvinToCel(currentKelvin);
+            APP_FEELSLIKE.innerHTML=`Feels like: ${convertKelvinToCel(feelsLikeKelvin)}`
+            APP_HIGHTEMP.innerHTML=`High temp: ${convertKelvinToCel(highKelvin)}`
+            APP_LOWTEMP.innerHTML=`Low temp: ${convertKelvinToCel(lowKelvin)}`
+        }else {
+           APP_DEGREES.innerHTML=convertKelvinToFar(currentKelvin);
+           APP_FEELSLIKE.innerHTML=`Feels like: ${convertKelvinToFar(feelsLikeKelvin)}`
+           APP_HIGHTEMP.innerHTML=`High temp: ${convertKelvinToFar(highKelvin)}`
+           APP_LOWTEMP.innerHTML=`Low temp: ${convertKelvinToFar(lowKelvin)}`
+        }
+    }
 }
 
 function refreshWeather() {
@@ -163,18 +178,20 @@ function refreshWeather() {
 function moreInformation() {
     console.log("triggered")
     if (detailedWeather.style.display == "none" || detailedWeather.style.display == "") {
-        detailedWeather.style.display="flex";
+        detailedWeather.style.display="grid";
+        moreInfo.innerHTML="less information"
     }else {
         detailedWeather.style.display="none";
+        moreInfo.innerHTML="more information"
     }     
 }
 
 //--------------------Event Listeners----------------------
 
 searchBtn.addEventListener('click', citySearchWeather);
-APP_DEGREES.addEventListener('click', toggleDegrees);
 moreInfo.addEventListener('click', moreInformation);
 refreshBtn.addEventListener('click', refreshWeather);
+degreeToggle.addEventListener('click', toggleDegrees);
 
 //allow enter key to be used with searchbar
 input.addEventListener("keyup", function(event) {
@@ -195,8 +212,6 @@ input.addEventListener("keyup", function(event) {
 
 
 
-  //add default sunshine icon
-  //fix background loading
-  //apply icons
+  
   //add search api dropdown
   //fix geo location on load.
