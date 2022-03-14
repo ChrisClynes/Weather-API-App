@@ -33,22 +33,21 @@ function getGeoLocation() {
     }
 }
 function setCoords(position){
-    let lat = position.coords.lattitude;
+    let lat = position.coords.latitude;
     let long = position.coords.longitude;
-    console.log(position.coords.lattitude)
+    console.log(position.coords.latitude)
     geoLocationWeather(lat, long);
 }
 function showError(error){
     document.getElementById("location").innerHTML=error.message;
-    document.getElementById("description").innerHTML="Unable to obtain weather data";
 }
-
-function geoLocationWeather(lattitude, longitude) {
-    let apiUrl =`api.openweathermap.org/data/2.5/weather?lat=${lattitude}&lon=${longitude}&appid=`
-    if (lattitude == undefined || longitude == undefined){
+function geoLocationWeather(latitude, longitude) {
+    let apiUrl =`https://api.openweathermap.org/data/2.5/weather?lat=34.28743167852681&lon=-77.80134432402818&appid=`
+    if (latitude == undefined || longitude == undefined){
         APP_LOCATION.innerHTML="location data not available, please use search";
         return;//if location data cannot be pulled from browser, display message and return out of function
     }else {
+        
         fetchWeatherData(apiUrl)
     }     
 }
