@@ -199,18 +199,3 @@ input.addEventListener("keyup", function(event) {
       searchBtn.click();// Triggers click action on search button
     }
   });
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  //add search api dropdown
-  //fix geo location on load.
