@@ -23,6 +23,7 @@ let feelsLikeKelvin = null;
 let highKelvin = null;
 let lowKelvin = null;
 let currentLocation = null;
+let geoFlag = 0; //flag to determine if current data is geoLocation or not.
 
 //---------------check for geo location-------------------------
 function getGeoLocation() {
@@ -47,7 +48,7 @@ function geoLocationWeather(latitude, longitude) {
         APP_LOCATION.innerHTML="location data not available, please use search";
         return;//if location data cannot be pulled from browser, display message and return out of function
     }else {
-        
+        geoFlag = 1;
         fetchWeatherData(apiUrl)
     }     
 }
@@ -64,6 +65,7 @@ function fetchWeatherData(url) {
 function citySearchWeather() {
     let searchInput = document.getElementById('search-input').value;
     let apiUrl =`https://api.openweathermap.org/data/2.5/weather?q=${searchInput}&appid=`
+    geoFlag = 0;
     fetchWeatherData(apiUrl);
 }
 function cityErrorCheck(data){
@@ -168,9 +170,12 @@ function toggleDegrees() {
 function refreshWeather() {
     let apiUrl =`https://api.openweathermap.org/data/2.5/weather?q=${currentLocation}&appid=`
     if (currentLocation == null || currentLocation == undefined){
-        return
+        return;
+    }
+    if (geoFlag == 1){
+      getGeoLocation()//used to refresh data if curent data from geolocation 
     }else {
-        citySearchWeather(apiUrl);
+        citySearchWeather(apiUrl);// if not currently on geolocation data, refresh last searched data
     }
 }
 
@@ -199,3 +204,17 @@ input.addEventListener("keyup", function(event) {
       searchBtn.click();// Triggers click action on search button
     }
   });
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
