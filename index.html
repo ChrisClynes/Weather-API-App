@@ -1,48 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- CSS Font-Awesome and Fredoka Font-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300&family=Nunito:wght@300&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./styles.css"/>
-    <title>Weather API APP</title>
-</head>
-<body>
-    <style>
-        body { 
-            background-image: url('https://source.unsplash.com/random/1920x1080/?wallpaper,landscape');
-        }
-    </style>
-    <div class="weather-container">
-        <div class="title">Weather Check</div>
-        <div class="search-bar weather-items">
-            <input type="text" id="search-input" placeholder="find a location"/>
-            <button type="submit" id="search-btn"><i class="fa fa-search" title="submit search" aria-label="submit search"></i></button>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- CSS Font-Awesome and Fredoka Font-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300&family=Nunito:wght@300&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="./styles.css"/>
+        <title>Weather API APP</title>
+    </head>
+    <body>
+        <style>
+            body { 
+                background-image: url('https://source.unsplash.com/random/1920x1080/?wallpaper,landscape');
+            }
+        </style>
+        <div class="weather-container">
+            <div class="title">Weather Check</div>
+            <div class="search-bar weather-items">
+                <input type="text" id="search-input" placeholder="find a location"/>
+                <button type="submit" id="search-btn"><i class="fa fa-search" title="submit search" aria-label="submit search"></i></button>
+            </div>
+            <div class="location weather-items" id="location"></div>
+            <img class="weather-icon weather-items" id="weather-icon"></img>
+            <div class="temperature weather-items" id="degrees">-°F</div>
+            <div class="description weather-items" id="description"></div>
+            <div class="detailed-weather" id="detailed-weather">
+                <div class="detailed-item" id="feels-like"></div>
+                <div class="detailed-item" id="high-temp"></div>
+                <div class="detailed-item" id="low-temp"></div>
+                <div class="detailed-item" id="humidity"></div>
+                <div class="detailed-item" id="wind-direction"></div>
+                <div class="detailed-item" id="windspeed"></div>
+            </div>
+            <div class="refresh weather-items" id="refresh">
+                <div id="more-info">more information</div>
+                <button id="refresh-btn"><i class="fa fa-refresh"></i></button>
+                <div id="degree-toggle">°F/°C</div>
+            </div>
+            </div>
         </div>
-        <div class="location weather-items" id="location"></div>
-        <img class="weather-icon weather-items" id="weather-icon"></img>
-        <div class="temperature weather-items" id="degrees">-°F</div>
-        <div class="description weather-items" id="description"></div>
-        <div class="detailed-weather" id="detailed-weather">
-            <div class="detailed-item" id="feels-like"></div>
-            <div class="detailed-item" id="high-temp"></div>
-            <div class="detailed-item" id="low-temp"></div>
-            <div class="detailed-item" id="humidity"></div>
-            <div class="detailed-item" id="wind-direction"></div>
-            <div class="detailed-item" id="windspeed"></div>
-        </div>
-        <div class="refresh weather-items" id="refresh">
-            <div id="more-info">more information</div>
-            <button id="refresh-btn"><i class="fa fa-refresh"></i></button>
-            <div id="degree-toggle">°F/°C</div>
-        </div>
-        </div>
-    </div>
-    <script type="text/javascript" src="./index.js"></script>
-</body>
+        <script type="text/javascript" src="./index.js"></script>
+    </body>
 </html>
